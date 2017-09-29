@@ -6,6 +6,7 @@ CoordTransform 坐标转换
 [wandergis/coordtransform](https://github.com/wandergis/coordtransform)的Java版。
 提供百度坐标（BD09）、国测局坐标（火星坐标，GCJ02）、和WGS84坐标系之间的转换的工具模块。  
 
+**注意**：CoordinateTransformUtil的方法的输入输出参数都为`(lng, lat)`，和Android一般的`(lat, lng)`正好相反，使用时要注意一下。
 
 ## 国内外判断
 
