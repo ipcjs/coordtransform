@@ -91,21 +91,11 @@ public class CoordinateTransformUtil {
         if (outOfChina(lng, lat)) {
             return new double[]{lng, lat};
         }
-        double dlat = transformLat(lng - 105.0, lat - 35.0);
-        double dlng = transformLng(lng - 105.0, lat - 35.0);
-        double radlat = lat / 180.0 * PI;
-        double magic = Math.sin(radlat);
-        magic = 1 - EE * magic * magic;
-        double sqrtmagic = Math.sqrt(magic);
-        dlat = (dlat * 180.0) / ((A * (1 - EE)) / (magic * sqrtmagic) * PI);
-        dlng = (dlng * 180.0) / (A / sqrtmagic * Math.cos(radlat) * PI);
-        double mglat = lat + dlat;
-        double mglng = lng + dlng;
-        return new double[]{mglng, mglat};
+        return transform(lng, lat);
     }
 
     /**
-     * GCJ02(火星坐标系)转GPS84
+     * GCJ02(火星坐标系)转WGS84
      *
      * @param lng 火星坐标系的经度
      * @param lat 火星坐标系纬度
@@ -115,6 +105,11 @@ public class CoordinateTransformUtil {
         if (outOfChina(lng, lat)) {
             return new double[]{lng, lat};
         }
+        double[] out = transform(lng, lat);
+        return new double[]{lng * 2 - out[0], lat * 2 - out[1]};
+    }
+
+    private static double[] transform(final double lng, final double lat) {
         double dlat = transformLat(lng - 105.0, lat - 35.0);
         double dlng = transformLng(lng - 105.0, lat - 35.0);
         double radlat = lat / 180.0 * PI;
@@ -123,9 +118,7 @@ public class CoordinateTransformUtil {
         double sqrtmagic = Math.sqrt(magic);
         dlat = (dlat * 180.0) / ((A * (1 - EE)) / (magic * sqrtmagic) * PI);
         dlng = (dlng * 180.0) / (A / sqrtmagic * Math.cos(radlat) * PI);
-        double mglat = lat + dlat;
-        double mglng = lng + dlng;
-        return new double[]{lng * 2 - mglng, lat * 2 - mglat};
+        return new double[]{lng + dlng, lat + dlat};
     }
 
     /**
