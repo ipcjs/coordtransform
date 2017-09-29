@@ -1,8 +1,8 @@
 package me.demo.util.geo.test;
 
-import org.junit.Test;
+import com.github.ipcjs.coordtransform.CoordinateTransformUtil;
 
-import me.demo.util.geo.CoordinateTransformUtil;
+import org.junit.Test;
 
 /**
  * 坐标转换-测试用例

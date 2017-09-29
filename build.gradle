@@ -44,6 +44,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                BAIDU_MAP_KEY : "rM8VXLKBO7K9F69vdAyNc1Mr9H8p9wma",
+                GOOGLE_MAP_KEY: "xx",
+        ]
     }
     buildTypes {
         release {
@@ -52,6 +56,10 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     signingConfigs {
         // your debug keystore
@@ -72,10 +80,12 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    implementation project(':library')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-   
+    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.1.0'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // compile "com.android.support:support-v4:${rootProject.supportVersion}"
+    compile "com.android.support:appcompat-v7:$rootProject.supportVersion"
 }
