@@ -8,7 +8,9 @@ import java.util.Locale;
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.bd09ToGcj02;
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.bd09ToWgs84;
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.gcj02ToBd09;
+import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.gcj02ToWgs84;
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.wgs84ToBd09;
+import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.wgs84ToGcj02;
 
 /**
  * Created by ipcjs on 2017/9/28.
@@ -49,11 +51,11 @@ public class CoordinateConverterTest {
         double lng = 113.915547;
 
         p("wgs84 <-> gcj02");
-        double[] bd09_2 = wgs84ToBd09(lng, lat);
-        double[] wgs84_3 = bd09ToWgs84(bd09_2[0], bd09_2[1]);
+        double[] gcj02 = wgs84ToGcj02(lng, lat);
+        double[] wgs84 = gcj02ToWgs84(gcj02[0], gcj02[1]);
         p(toUrl(LatLng.from(CoordType.WGS84, lat, lng)));
-        p(toUrl(LatLng.from(CoordType.BD09, bd09_2[1], bd09_2[0]))); // 没有偏移
-        p(toUrl(LatLng.from(CoordType.WGS84, wgs84_3[1], wgs84_3[0]))); // 没有偏移
+        p(toUrl(LatLng.from(CoordType.GCJ02, gcj02[1], gcj02[0]))); // 没有偏移
+        p(toUrl(LatLng.from(CoordType.WGS84, wgs84[1], wgs84[0]))); // 没有偏移
     }
 
     @Test
@@ -117,13 +119,5 @@ public class CoordinateConverterTest {
         public double getLng() {
             return lng;
         }
-    }
-
-    private static class MutableLatLng {
-
-        public double latitude;
-
-        public double longitude;
-
     }
 }
