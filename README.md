@@ -13,6 +13,10 @@ CoordTransform 坐标转换
 
 ![国内的范围](doc/is_in_china.jpg)
 
+## 测试
+
+- [CoordinateConverterTest.java](/src/test/java/me/demo/util/geo/test/CoordinateConverterTest.java)：将坐标转换后生成[Web版百度](http://lbsyun.baidu.com/index.php?title=uri/api/web)的Url，点开即可查看转换是否偏移
+
 ## 其他版本实现
 
 - JavaScript版：[wandergis/coordtransform](https://github.com/wandergis/coordtransform)
