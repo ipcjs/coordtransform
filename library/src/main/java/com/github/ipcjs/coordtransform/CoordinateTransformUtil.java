@@ -2,9 +2,8 @@ package com.github.ipcjs.coordtransform;
 
 /**
  * 百度坐标（BD09）、国测局坐标（火星坐标，GCJ02）、和WGS84坐标系之间的转换的工具
- *
+ * <p>
  * 参考<a href="https://github.com/wandergis/coordtransform">wandergis/coordtransform</a>实现的Java版本
- *
  * @author geosmart
  */
 public class CoordinateTransformUtil {
@@ -16,7 +15,7 @@ public class CoordinateTransformUtil {
             new Rectangle(73.124600, 42.889900, 124.143255, 29.529700),
             new Rectangle(82.968400, 29.529700, 97.035200, 26.718600),
             new Rectangle(97.025300, 29.529700, 124.367395, 20.414096),
-            new Rectangle(107.975793, 20.414096, 111.744104, 17.871542)
+            new Rectangle(107.975793, 20.414096, 111.744104, 17.871542),
     };
 
     //China excluded region - raw data
@@ -26,7 +25,8 @@ public class CoordinateTransformUtil {
             new Rectangle(106.452500, 21.542200, 108.051000, 20.487800),
             new Rectangle(109.032300, 55.817500, 119.127000, 50.325700),
             new Rectangle(127.456800, 55.817500, 137.022700, 49.557400),
-            new Rectangle(131.266200, 44.892200, 137.022700, 42.569200)
+            new Rectangle(131.266200, 44.892200, 137.022700, 42.569200),
+            new Rectangle(73.124600, 35.398637, 77.948114, 29.529700),
     };
 
     private static double X_PI = 3.14159265358979324 * 3000.0 / 180.0;
@@ -56,7 +56,6 @@ public class CoordinateTransformUtil {
 
     /**
      * WGS84转GCJ02(火星坐标系)
-     *
      * @param lng WGS84坐标系的经度
      * @param lat WGS84坐标系的纬度
      * @return 火星坐标数组
@@ -70,7 +69,6 @@ public class CoordinateTransformUtil {
 
     /**
      * GCJ02(火星坐标系)转WGS84
-     *
      * @param lng 火星坐标系的经度
      * @param lat 火星坐标系纬度
      * @return WGS84坐标数组
@@ -85,7 +83,6 @@ public class CoordinateTransformUtil {
 
     /**
      * 火星坐标系(GCJ-02)转百度坐标系(BD-09)
-     *
      * @param lng 火星坐标经度
      * @param lat 火星坐标纬度
      * @return 百度坐标数组
@@ -101,7 +98,6 @@ public class CoordinateTransformUtil {
 
     /**
      * 百度坐标系(BD-09)转火星坐标系(GCJ-02)
-     *
      * @param bd_lng 百度坐标纬度
      * @param bd_lat 百度坐标经度
      * @return 火星坐标数组
@@ -119,7 +115,6 @@ public class CoordinateTransformUtil {
 
     /**
      * WGS坐标转百度坐标系(BD-09)
-     *
      * @param lng WGS84坐标系的经度
      * @param lat WGS84坐标系的纬度
      * @return 百度坐标数组
@@ -132,7 +127,6 @@ public class CoordinateTransformUtil {
 
     /**
      * 百度坐标系(BD-09)转WGS坐标
-     *
      * @param lng 百度坐标纬度
      * @param lat 百度坐标经度
      * @return WGS84坐标数组
