@@ -8,7 +8,7 @@ package com.github.ipcjs.coordtransform;
  */
 public class CoordinateTransformUtil {
 
-    //China region - raw data
+    // China region - raw data
     public static final Rectangle[] REGION = {
             new Rectangle(79.446200, 49.220400, 96.330000, 42.889900),
             new Rectangle(109.687200, 54.141500, 135.000200, 39.374200),
@@ -18,7 +18,7 @@ public class CoordinateTransformUtil {
             new Rectangle(107.975793, 20.414096, 111.744104, 17.871542),
     };
 
-    //China excluded region - raw data
+    // China excluded region - raw data
     public static final Rectangle[] EXCLUDE = {
             new Rectangle(119.921265, 25.398623, 122.497559, 21.785006),
             new Rectangle(101.865200, 22.284000, 106.665000, 20.098800),
@@ -27,6 +27,10 @@ public class CoordinateTransformUtil {
             new Rectangle(127.456800, 55.817500, 137.022700, 49.557400),
             new Rectangle(131.266200, 44.892200, 137.022700, 42.569200),
             new Rectangle(73.124600, 35.398637, 77.948114, 29.529700),
+    };
+
+    // China excluded region 2, HongKong etc.
+    public static final Rectangle[] EXCLUDE_REGION_2 = {
             new Rectangle(114.505238, 22.138258, 113.845000, 22.428903),
             new Rectangle(113.97000, 22.507833, 114.450000, 22.428903),
     };
@@ -43,6 +47,10 @@ public class CoordinateTransformUtil {
     private static double EE = 0.00669342162296594323;
 
     private static boolean isInChina(double lng, double lat) {
+        return isInChina(lng, lat, true);
+    }
+
+    private static boolean isInChina(double lng, double lat, boolean excludeRegion2) {
         for (Rectangle region : REGION) {
             if (region.contain(lng, lat)) {
                 for (Rectangle exclude : EXCLUDE) {
@@ -50,14 +58,21 @@ public class CoordinateTransformUtil {
                         return false;
                     }
                 }
-                return true;
+                if (excludeRegion2) {
+                    for (Rectangle exclude : EXCLUDE_REGION_2) {
+                        if (exclude.contain(lng, lat)) {
+                            return false;
+                        }
+                    }
+                }
             }
+            return true;
         }
         return false;
     }
 
     /**
-     * WGS84转GCJ02(火星坐标系)
+     * WGS84转GCJ02(火星坐标系) (判断了中国范围)
      * @param lng WGS84坐标系的经度
      * @param lat WGS84坐标系的纬度
      * @return 火星坐标数组
@@ -66,6 +81,55 @@ public class CoordinateTransformUtil {
         if (!isInChina(lng, lat)) {
             return new double[]{lng, lat};
         }
+        return wgs84ToGcj02Raw(lng, lat);
+    }
+
+    /**
+     * GCJ02(火星坐标系)转WGS84 (判断了中国范围)
+     * @param lng 火星坐标系的经度
+     * @param lat 火星坐标系纬度
+     * @return WGS84坐标数组
+     */
+    public static double[] gcj02ToWgs84(double lng, double lat) {
+        if (!isInChina(lng, lat)) {
+            return new double[]{lng, lat};
+        }
+        return gcj02ToWgs84Raw(lng, lat);
+    }
+
+    /**
+     * 百度坐标系(BD-09)转WGS坐标 (判断了中国范围)
+     * @param lng 百度坐标纬度
+     * @param lat 百度坐标经度
+     * @return WGS84坐标数组
+     */
+    public static double[] bd09ToWgs84(double lng, double lat) {
+        if (!isInChina(lng, lat, false)) {
+            return new double[]{lng, lat};
+        }
+        return bd09ToWgs84Raw(lng, lat);
+    }
+
+    /**
+     * WGS坐标转百度坐标系(BD-09) (判断了中国范围)
+     * @param lng WGS84坐标系的经度
+     * @param lat WGS84坐标系的纬度
+     * @return 百度坐标数组
+     */
+    public static double[] wgs84ToBd09(double lng, double lat) {
+        if (!isInChina(lng, lat, false)) {
+            return new double[]{lng, lat};
+        }
+        return wgs84ToBd09Raw(lng, lat);
+    }
+
+    /**
+     * WGS84转GCJ02(火星坐标系)
+     * @param lng WGS84坐标系的经度
+     * @param lat WGS84坐标系的纬度
+     * @return 火星坐标数组
+     */
+    public static double[] wgs84ToGcj02Raw(double lng, double lat) {
         return transform(lng, lat);
     }
 
@@ -75,10 +139,7 @@ public class CoordinateTransformUtil {
      * @param lat 火星坐标系纬度
      * @return WGS84坐标数组
      */
-    public static double[] gcj02ToWgs84(double lng, double lat) {
-        if (!isInChina(lng, lat)) {
-            return new double[]{lng, lat};
-        }
+    public static double[] gcj02ToWgs84Raw(double lng, double lat) {
         double[] out = transform(lng, lat);
         return new double[]{lng * 2 - out[0], lat * 2 - out[1]};
     }
@@ -121,8 +182,8 @@ public class CoordinateTransformUtil {
      * @param lat WGS84坐标系的纬度
      * @return 百度坐标数组
      */
-    public static double[] wgs84ToBd09(double lng, double lat) {
-        double[] gcj = wgs84ToGcj02(lng, lat);
+    public static double[] wgs84ToBd09Raw(double lng, double lat) {
+        double[] gcj = wgs84ToGcj02Raw(lng, lat);
         double[] bd09 = gcj02ToBd09(gcj[0], gcj[1]);
         return bd09;
     }
@@ -133,9 +194,9 @@ public class CoordinateTransformUtil {
      * @param lat 百度坐标经度
      * @return WGS84坐标数组
      */
-    public static double[] bd09ToWgs84(double lng, double lat) {
+    public static double[] bd09ToWgs84Raw(double lng, double lat) {
         double[] gcj = bd09ToGcj02(lng, lat);
-        double[] wgs84 = gcj02ToWgs84(gcj[0], gcj[1]);
+        double[] wgs84 = gcj02ToWgs84Raw(gcj[0], gcj[1]);
         return wgs84;
     }
 
