@@ -3,8 +3,10 @@ package me.demo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.baidu.mapapi.CoordType;
@@ -86,24 +88,28 @@ public class MainActivity extends AppCompatActivity {
             mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLngBounds(boundBuilder.build()));
         });
 
+        mBaiduMap.setOnMapTouchListener(new BaiduMap.OnMapTouchListener() {
+            @Override
+            public void onTouch(MotionEvent event) {
+                if (event.getAction() != MotionEvent.ACTION_UP) {
+                    return;
+                }
+                LatLng latLng = mBaiduMap.getProjection().fromScreenLocation(new Point((int) event.getX(), (int) event.getY()));
+                Log.d(TAG, "onTouch: " + latLng + ", (" + event.getX() + ", " + event.getY() + ")");
+                // 要延时一下, 否则OnMapClickListener会不生效...
+                getWindow().getDecorView().postDelayed(() -> updateDotMarker(latLng), 500);
+            }
+        });
+
         mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if (mDotMarker != null) {
-                    mDotMarker.remove();
-                }
-                Log.i(TAG, "add dot on " + latLng.toString());
-                mDotMarker = mBaiduMap.addOverlay(new MarkerOptions()
-                        .position(latLng)
-                        .anchor(0.5f, 0.5f)
-                        .title(latLng.toString())
-                        .icon(createDotIcon())
-                );
+                Log.d(TAG, "onMapClick: " + latLng);
             }
 
             @Override
             public void onMapPoiClick(MapPoi mapPoi) {
-
+                Log.d(TAG, "onMapPoiClick: " + mapPoi.getName() + ", " + mapPoi.getPosition());
             }
         });
         mBaiduMap.setOnMarkerClickListener(marker -> {
@@ -115,6 +121,19 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void updateDotMarker(LatLng latLng) {
+        if (mDotMarker != null) {
+            mDotMarker.remove();
+        }
+        Log.i(TAG, "add dot on " + latLng.toString());
+        mDotMarker = mBaiduMap.addOverlay(new MarkerOptions()
+                .position(latLng)
+                .anchor(0.5f, 0.5f)
+                .title(latLng.toString())
+                .icon(createDotIcon())
+        );
     }
 
     @NonNull
