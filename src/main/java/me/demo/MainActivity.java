@@ -4,10 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -30,6 +26,11 @@ import com.baidu.mapapi.model.LatLngBounds;
 import com.github.ipcjs.coordtransform.CoordinateTransformUtil;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * Created by ipcjs on 2017/9/29.
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getSupportFragmentManager();
 
+        SDKInitializer.setAgreePrivacy(getApplicationContext(), true);
         SDKInitializer.initialize(getApplicationContext());
         SDKInitializer.setCoordType(CoordType.GCJ02);
 
@@ -100,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onMapPoiClick(MapPoi mapPoi) {
-                return false;
+            public void onMapPoiClick(MapPoi mapPoi) {
+
             }
         });
         mBaiduMap.setOnMarkerClickListener(marker -> {
