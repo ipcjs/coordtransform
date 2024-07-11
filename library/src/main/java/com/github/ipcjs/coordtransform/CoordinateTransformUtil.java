@@ -65,8 +65,8 @@ public class CoordinateTransformUtil {
                         }
                     }
                 }
+                return true;
             }
-            return true;
         }
         return false;
     }

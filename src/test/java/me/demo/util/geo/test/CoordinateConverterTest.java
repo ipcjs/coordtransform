@@ -11,6 +11,7 @@ import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.gcj02ToBd0
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.gcj02ToWgs84;
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.wgs84ToBd09;
 import static com.github.ipcjs.coordtransform.CoordinateTransformUtil.wgs84ToGcj02;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * Created by ipcjs on 2017/9/28.
@@ -41,7 +42,8 @@ public class CoordinateConverterTest {
                 location.getLat(),
                 location.getLng(),
                 location.getCoordType(),
-                coordTypeStr);
+                coordTypeStr
+        );
     }
 
     @Test
@@ -56,6 +58,7 @@ public class CoordinateConverterTest {
         p(toUrl(LatLng.from(CoordType.WGS84, lat, lng)));
         p(toUrl(LatLng.from(CoordType.GCJ02, gcj02[1], gcj02[0]))); // 没有偏移
         p(toUrl(LatLng.from(CoordType.WGS84, wgs84[1], wgs84[0]))); // 没有偏移
+        assertArrayEquals(new double[]{lng, lat}, wgs84, 1e-5);
     }
 
     @Test
@@ -70,6 +73,7 @@ public class CoordinateConverterTest {
         p(toUrl(LatLng.from(CoordType.WGS84, lat, lng)));
         p(toUrl(LatLng.from(CoordType.BD09, bd09_1[1], bd09_1[0]))); // 没有偏移
         p(toUrl(LatLng.from(CoordType.WGS84, wgs84_4[1], wgs84_4[0]))); // 没有偏移
+        assertArrayEquals(new double[]{lng, lat}, wgs84_4, 1e-5);
     }
 
     @Test
@@ -84,13 +88,14 @@ public class CoordinateConverterTest {
         p(toUrl(LatLng.from(CoordType.BD09, lat, lng)));
         p(toUrl(LatLng.from(CoordType.GCJ02, gcj02_2[1], gcj02_2[0]))); // 没有偏移
         p(toUrl(LatLng.from(CoordType.BD09, bd09_3[1], bd09_3[0]))); // 没有偏移
+        assertArrayEquals(new double[]{lng, lat}, bd09_3, 1e-5);
     }
 
-    private enum CoordType {
+    public enum CoordType {
         BD09, GCJ02, WGS84
     }
 
-    private static class LatLng {
+    public static class LatLng {
 
         private final CoordType coordType;
 
